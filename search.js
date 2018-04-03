@@ -24,22 +24,22 @@ async function scanDirectory(directory, extension, text) {
     const result = [];
     const items = await readdir(directory);
     await Promise.all(items.map(async (item) => {
-            const fullPath = directory + '\\'+item; 
-            const stats = await stat(fullPath)
-            if (stats.isDirectory()) {
-                    const localResult = await scanDirectory(fullPath, extension, text);
-                    result.push(...localResult);
-            }
-            if (stats.isFile()) {
-                const itemExtension = path.extname(item).slice(1);
-                if (itemExtension === extension) {
-                    const contents = await readFile(fullPath, 'utf8');
-                    if (contents.includes(text)) {
-                        result.push(fullPath);
-                    }
-                }    
-            }
-        }))
+        const fullPath = directory + '\\'+item; 
+        const stats = await stat(fullPath)
+        if (stats.isDirectory()) {
+            const localResult = await scanDirectory(fullPath, extension, text);
+            result.push(...localResult);
+        }
+        if (stats.isFile()) {
+            const itemExtension = path.extname(item).slice(1);
+            if (itemExtension === extension) {
+                const contents = await readFile(fullPath, 'utf8');
+                if (contents.includes(text)) {
+                    result.push(fullPath);
+                }
+            }    
+        }
+    }))
     return result;
 }
 
